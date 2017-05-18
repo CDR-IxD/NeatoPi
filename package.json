@@ -1,5 +1,5 @@
 {
-  "name": "socket-neato",
+  "name": "neato-pi",
   "version": "0.0.1",
   "private": true,
   "description": "server for controlling multiple neatos",
