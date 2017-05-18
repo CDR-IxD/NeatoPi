@@ -1,0 +1,14 @@
+{
+  "name": "socket-neato",
+  "version": "0.0.1",
+  "private": true,
+  "description": "server for controlling multiple neatos",
+  "main": "neato-pi.js",
+  "author": "Tim Lee <tlee732@gmail.com>",
+  "dependencies": {
+    "express": "^4.15.2",
+    "serialport": "^4.0.1",    
+    "socket.io": "^1.7.3",
+    "socketio": "^1.0.0"    
+  }
+}
