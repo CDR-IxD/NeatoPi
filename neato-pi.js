@@ -14,7 +14,7 @@ Notes:
 
 // Setup the connection to the server
 var SerialPort = require("serialport");
-var socket = require('socket.io-client')('http://cdr-ubuntu.local:3000');
+var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
 
 // connect to server
 socket.on('connect', function(){
