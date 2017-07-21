@@ -14,17 +14,17 @@ Notes:
 
 // Setup the connection to the server
 var SerialPort = require("serialport");
-var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
+// var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
+var io = require('socket.io').listen(3000);
 
-// connect to server
-socket.on('connect', function(){
+io.sockets.on('connection', function(){
   // tell server it is a neato connecting
-  socket.emit('storeClientInfo', { clientType: "Neato"});
-  
+  // socket.emit('storeClientInfo', { clientType: "Neato"});
+
   // pass drive messages to Neato
   socket.on('drive2Neato', function(data){
     console.log("drive:", data);
-    drive(data.LWheelDist, data.RWheelDist, data.Speed);
+    //drive(data.LWheelDist, data.RWheelDist, data.Speed);
   });
 
   socket.on('disconnect', function(){});
@@ -58,8 +58,8 @@ port.on('error', function(err) {
 
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed) {
-  console.log('SetMotor LWheelDist ' + LWheelDist + 
+  console.log('SetMotor LWheelDist ' + LWheelDist +
              ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n')
-  port.write('SetMotor LWheelDist ' + LWheelDist + 
+  port.write('SetMotor LWheelDist ' + LWheelDist +
              ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
 }
