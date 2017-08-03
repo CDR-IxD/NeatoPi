@@ -12,25 +12,44 @@ Notes:
 
 /********************* Server Functions *********************/
 
-// Setup the connection to the server
-var SerialPort = require("serialport");
-// var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
-var io = require('socket.io').listen(3000);
+const WebSocket = require('ws');
 
-io.sockets.on('connection', function(){
-  // tell server it is a neato connecting
-  // socket.emit('storeClientInfo', { clientType: "Neato"});
+const wss = new WebSocket.server({port: 3000});
 
-  // pass drive messages to Neato
-  socket.on('drive2Neato', function(data){
-    console.log("drive:", data);
-    //drive(data.LWheelDist, data.RWheelDist, data.Speed);
+wss.on('connection', function connection(ws) {
+  console.log('connected');
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+    var parsed = message.split(",");
+
+    // pwm_right = parsed[1]
+    // pwm_left = parsed[2]
+    console.log("Right: " + parsed[1] + " Left: " + parsed[2]);
+
   });
-
-  socket.on('disconnect', function(){});
 });
+// Setup the connection to the server
+// var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
+//var io = require('socket.io').listen(3000);
+
+//io.sockets.on('connection', function(socket){
+  //// tell server it is a neato connecting
+  //// socket.emit('storeClientInfo', { clientType: "Neato"});
+  //console.log("Connected to port 3000");
+
+  //// pass drive messages to Neato
+  //socket.on(0, function(data){
+    //console.log("drive:", data);
+    ////drive(data.LWheelDist, data.RWheelDist, data.Speed);
+  //});
+
+  //socket.on('disconnect', function(){});
+//});
 
 /********************* Neato Functions *********************/
+
+
+var SerialPort = require("serialport");
 
 // Setup the connection to the Neato
 var port = new SerialPort("/dev/ttyACM0", {
@@ -46,7 +65,6 @@ port.on('open', function() {
     console.log('Neato Ready!');
   });
 
-  //testPath();
 });
 
 // open errors will be emitted as an error event
