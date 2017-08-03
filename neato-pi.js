@@ -14,17 +14,21 @@ Notes:
 
 const WebSocket = require('ws');
 
-const wss = new WebSocket.server({port: 3000});
+const wss = new WebSocket.Server({ port: 3000 });
 
 wss.on('connection', function connection(ws) {
   console.log('connected');
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
     var parsed = message.split(",");
 
-    // pwm_right = parsed[1]
-    // pwm_left = parsed[2]
+    var pwm_right = parsed[1]
+    var pwm_left = parsed[2]
     console.log("Right: " + parsed[1] + " Left: " + parsed[2]);
+
+    var speed = (pwm_left + pwm_right)/2;
+
+    drive(pwm_left, pwm_right, speed);
+
 
   });
 });
