@@ -16,16 +16,19 @@ const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 3000 });
 
+
+
 wss.on('connection', function connection(ws) {
   console.log('connected');
   ws.on('message', function incoming(message) {
     var parsed = message.split(",");
 
-    var pwm_right = parsed[1]
-    var pwm_left = parsed[2]
+    var pwm_right = parseInt(parsed[1])
+    var pwm_left = parseInt(parsed[2])
     console.log("Right: " + parsed[1] + " Left: " + parsed[2]);
+     
 
-    var speed = (pwm_left + pwm_right)/2;
+    var speed = 1.5 * (pwm_left + pwm_right)/2;
 
     drive(pwm_left, pwm_right, speed);
 
@@ -67,7 +70,14 @@ port.on('open', function() {
       return console.log('Error on write: ', err.message);
     }
     console.log('Neato Ready!');
+/*
+	  var right = 50;
+	  var left = 10;
+	  var speed = 40;
+	  drive(left, right, speed);
+*/
   });
+
 
 });
 
@@ -80,8 +90,20 @@ port.on('error', function(err) {
 
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed) {
+//	for(var i = 0; i < 50; i++) {
   console.log('SetMotor LWheelDist ' + LWheelDist +
-             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n')
+             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
+
+/*
+	setTimeout(function() {
+}, 500);
+*/
+
   port.write('SetMotor LWheelDist ' + LWheelDist +
              ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
+// 	}
+
+	console.log("written to port");
 }
+
+
