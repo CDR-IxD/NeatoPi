@@ -13,45 +13,19 @@ Notes:
 /********************* Server Functions *********************/
 
 const WebSocket = require('ws');
-
 const wss = new WebSocket.Server({ port: 3000 });
-
-
 
 wss.on('connection', function connection(ws) {
   console.log('connected');
   ws.on('message', function incoming(message) {
     var parsed = message.split(",");
-
-    var pwm_right = parseInt(parsed[1])
-    var pwm_left = parseInt(parsed[2])
-    console.log("Right: " + parsed[1] + " Left: " + parsed[2]);
-     
-
-    var speed = 1.5 * (pwm_left + pwm_right)/2;
-
-    drive(pwm_left, pwm_right, speed);
-
-
+    var left = parsed[0];
+    var right = parsed[1];
+    var speed = parsed[2];
+    console.log("Left: " + parsed[0] + " Right: " + parsed[1] + " Speed: " + parsed[2]);
+    drive(left, right, speed);
   });
 });
-// Setup the connection to the server
-// var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
-//var io = require('socket.io').listen(3000);
-
-//io.sockets.on('connection', function(socket){
-  //// tell server it is a neato connecting
-  //// socket.emit('storeClientInfo', { clientType: "Neato"});
-  //console.log("Connected to port 3000");
-
-  //// pass drive messages to Neato
-  //socket.on(0, function(data){
-    //console.log("drive:", data);
-    ////drive(data.LWheelDist, data.RWheelDist, data.Speed);
-  //});
-
-  //socket.on('disconnect', function(){});
-//});
 
 /********************* Neato Functions *********************/
 
