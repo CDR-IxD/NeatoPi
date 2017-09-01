@@ -22,7 +22,6 @@ wss.on('connection', function connection(ws) {
     var left = parsed[0];
     var right = parsed[1];
     var speed = parsed[2];
-    console.log("Left: " + parsed[0] + " Right: " + parsed[1] + " Speed: " + parsed[2]);
     drive(left, right, speed);
   });
 });
@@ -64,20 +63,11 @@ port.on('error', function(err) {
 
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed) {
-//	for(var i = 0; i < 50; i++) {
   console.log('SetMotor LWheelDist ' + LWheelDist +
              ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
 
-/*
-	setTimeout(function() {
-}, 500);
-*/
-
   port.write('SetMotor LWheelDist ' + LWheelDist +
              ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
-// 	}
-
-	console.log("written to port");
 }
 
 
