@@ -43,12 +43,6 @@ port.on('open', function() {
       return console.log('Error on write: ', err.message);
     }
     console.log('Neato Ready!');
-/*
-	  var right = 50;
-	  var left = 10;
-	  var speed = 40;
-	  drive(left, right, speed);
-*/
   });
 
 
