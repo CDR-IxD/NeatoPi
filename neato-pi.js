@@ -18,11 +18,17 @@ const wss = new WebSocket.Server({ port: 3000 });
 wss.on('connection', function connection(ws) {
   console.log('connected');
   ws.on('message', function incoming(message) {
-    var parsed = message.split(",");
-    var left = parsed[0];
-    var right = parsed[1];
-    var speed = parsed[2];
-    drive(left, right, speed);
+    if (message == "ping") {
+      ws.send('pong: '+port.isOpen)
+      return;
+    }
+    try {
+      message = JSON.parse(message);
+    } catch (e) {
+      console.error("Unable to parse message", message, e);
+      return;
+    }
+    drive(message.left, message.right, message.speed);
   });
 });
 
@@ -57,11 +63,11 @@ port.on('error', function(err) {
 
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed) {
-  console.log('SetMotor LWheelDist ' + LWheelDist +
-             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
-
-  port.write('SetMotor LWheelDist ' + LWheelDist +
-             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
+  var msg = 'SetMotor LWheelDist ' + LWheelDist +
+            ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n';
+  
+  console.log(msg);
+  port.write(msg);
 }
 
 
