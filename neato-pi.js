@@ -28,7 +28,7 @@ wss.on('connection', function connection(ws) {
       console.error("Unable to parse message", message, e);
       return;
     }
-    drive(message.left, message.right, message.speed);
+    drive(message.left, message.right, message.speed, message.accel);
   });
 });
 
@@ -62,9 +62,9 @@ port.on('error', function(err) {
 /********************* Private Functions *********************/
 
 // drive the robot from messsages
-function drive(LWheelDist, RWheelDist, Speed) {
-  var msg = 'SetMotor LWheelDist ' + LWheelDist +
-            ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n';
+function drive(LWheelDist, RWheelDist, Speed, Accel) {
+  var msg = 'SetMotor LWheelDist ' + LWheelDist + ' RWheelDist ' + RWheelDist + 
+            ' Speed ' + Speed + ' Accel ' + Accel + '\n';
   
   console.log(msg);
   port.write(msg);
