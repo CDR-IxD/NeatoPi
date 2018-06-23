@@ -12,25 +12,30 @@ Notes:
 
 /********************* Server Functions *********************/
 
-// Setup the connection to the server
-var SerialPort = require("serialport");
-var socket = require('socket.io-client')('http://ubuntu-cdr.local:3000');
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 3000 });
 
-// connect to server
-socket.on('connect', function(){
-  // tell server it is a neato connecting
-  socket.emit('storeClientInfo', { clientType: "Neato"});
-  
-  // pass drive messages to Neato
-  socket.on('drive2Neato', function(data){
-    console.log("drive:", data);
-    drive(data.LWheelDist, data.RWheelDist, data.Speed);
+wss.on('connection', function connection(ws) {
+  console.log('connected');
+  ws.on('message', function incoming(message) {
+    if (message == "ping") {
+      ws.send('pong: '+port.isOpen)
+      return;
+    }
+    try {
+      message = JSON.parse(message);
+    } catch (e) {
+      console.error("Unable to parse message", message, e);
+      return;
+    }
+    drive(message.left, message.right, message.speed, message.accel);
   });
-
-  socket.on('disconnect', function(){});
 });
 
 /********************* Neato Functions *********************/
+
+
+var SerialPort = require("serialport");
 
 // Setup the connection to the Neato
 var port = new SerialPort("/dev/ttyACM0", {
@@ -46,7 +51,7 @@ port.on('open', function() {
     console.log('Neato Ready!');
   });
 
-  //testPath();
+
 });
 
 // open errors will be emitted as an error event
@@ -57,9 +62,12 @@ port.on('error', function(err) {
 /********************* Private Functions *********************/
 
 // drive the robot from messsages
-function drive(LWheelDist, RWheelDist, Speed) {
-  console.log('SetMotor LWheelDist ' + LWheelDist + 
-             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n')
-  port.write('SetMotor LWheelDist ' + LWheelDist + 
-             ' RWheelDist ' + RWheelDist + ' Speed ' + Speed + '\n');
+function drive(LWheelDist, RWheelDist, Speed, Accel) {
+  var msg = 'SetMotor LWheelDist ' + LWheelDist + ' RWheelDist ' + RWheelDist + 
+            ' Speed ' + Speed + ' Accel ' + Accel + '\n';
+  
+  console.log(msg);
+  port.write(msg);
 }
+
+
