@@ -61,13 +61,33 @@ port.on('error', function(err) {
 
 /********************* Private Functions *********************/
 
+var DRIVE_COMMAND_INTERVAL = 100; // ms between SetMotor commands.
+
+var lastDriveTime = Date.now() - DRIVE_COMMAND_INTERVAL;
+var nextDriveCommand;
+var nextDriveTimeout = null;
+
+function sendDrive() {
+  console.log(nextDriveCommand);
+  port.write(nextDriveCommand);
+  lastDriveTime = Date.now();
+  nextDriveTimeout = null;
+}
+
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed, Accel) {
   var msg = 'SetMotor LWheelDist ' + LWheelDist + ' RWheelDist ' + RWheelDist + 
             ' Speed ' + Speed + ' Accel ' + Accel + '\n';
-  
-  console.log(msg);
-  port.write(msg);
+  nextDriveCommand = msg;
+    
+  var now = Date.now();
+  if (now < lastDriveTime + DRIVE_COMMAND_INTERVAL) {
+    if (! nextDriveTimeout) {
+      nextDriveTimeout = setTimeout(sendDrive, lastDriveTime + DRIVE_COMMAND_INTERVAL - now);
+    }
+  } else {
+    sendDrive();
+  }
 }
 
 
