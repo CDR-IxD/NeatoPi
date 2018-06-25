@@ -74,10 +74,15 @@ function sendDrive() {
   nextDriveTimeout = null;
 }
 
+function round(n, digits) {
+  var m = Math.pow(10, digits);
+  return Math.round(m * n) / m;
+}
+
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed, Accel) {
-  var msg = 'SetMotor LWheelDist ' + LWheelDist + ' RWheelDist ' + RWheelDist + 
-            ' Speed ' + Speed + ' Accel ' + Accel + '\n';
+  var msg = 'SetMotor LWheelDist ' + round(LWheelDist, 2) + ' RWheelDist ' + round(RWheelDist, 2) + 
+            ' Speed ' + round(Speed, 2) + ' Accel ' + round(Accel, 2) + '\n';
   nextDriveCommand = msg;
     
   var now = Date.now();
