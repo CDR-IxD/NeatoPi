@@ -61,7 +61,7 @@ port.on('error', function(err) {
 
 /********************* Private Functions *********************/
 
-var DRIVE_COMMAND_INTERVAL = 100; // ms between SetMotor commands.
+var DRIVE_COMMAND_INTERVAL = 250; // ms between SetMotor commands.
 
 var lastDriveTime = Date.now() - DRIVE_COMMAND_INTERVAL;
 var nextDriveCommand;
@@ -82,7 +82,7 @@ function round(n, digits) {
 // drive the robot from messsages
 function drive(LWheelDist, RWheelDist, Speed, Accel) {
   var msg = 'SetMotor LWheelDist ' + round(LWheelDist, 0) + ' RWheelDist ' + round(RWheelDist, 0) + 
-            ' Speed ' + round(Speed, 0) + ' Accel ' + round(Accel, 0) + '\n';
+            ' Speed ' + round(Speed, 0) + '\n';
   nextDriveCommand = msg;
     
   var now = Date.now();
