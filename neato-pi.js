@@ -61,7 +61,7 @@ port.on('error', function(err) {
 
 /********************* Private Functions *********************/
 
-var DRIVE_COMMAND_INTERVAL = 250; // ms between SetMotor commands.
+var DRIVE_COMMAND_INTERVAL = 20; // ms between SetMotor commands.
 
 var lastDriveTime = Date.now() - DRIVE_COMMAND_INTERVAL;
 var nextDriveCommand;
